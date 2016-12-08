@@ -1,0 +1,25 @@
+class Test 
+{
+	Test()
+	{ 
+		System.out.println("0-arg cons");
+		this(10);
+	}
+	Test(int a)
+	{
+		System.out.println("1-arg cons");
+		this(10,20);
+
+	}
+	Test(int a, int b)
+	{
+		System.out.println("2-arg cons");
+	}
+	public static void main(String[] args) 
+	{
+		Test t1=new Test();
+		//Test t2=new Test();
+		//Test t3=new Test();
+		
+	}
+}
