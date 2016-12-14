@@ -1,0 +1,13 @@
+class Test 
+{
+	public static void main(String[] args) 
+	{
+		String s1="cnu";
+        System.out.println(s1);
+		System.out.println(s1.toString());
+		StringBuffer sb1=new StringBuffer("reddy");
+		System.out.println(sb1);
+		System.out.println(sb1.toString());
+
+	}
+}

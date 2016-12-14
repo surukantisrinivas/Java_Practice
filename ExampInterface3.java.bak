@@ -1,0 +1,15 @@
+interface It1
+{
+	interface It2
+	{
+		void m1();
+	}
+}
+class  Test implements It1.It2
+{
+	public void m1(){System.out.println("m1 method");}
+	public static void main(String[] args) 
+	{
+		new Test().m1();
+	}
+}
