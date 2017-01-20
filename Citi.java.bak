@@ -1,0 +1,13 @@
+public class Citi extends AbstractFundTransfer 
+{
+	public static void main(String[] args) 
+	{
+		if(amount<0){
+			status=false;
+		}else{
+			status =true;
+		}
+
+		System.out.println("Performing Citi Transfer" +amount +"="+srcAc+destAc));
+	}
+}
