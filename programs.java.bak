@@ -1,0 +1,587 @@
+/*
+package com.servlet.first;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+
+//@WebServlet("/FirstServlet") //by using annatotion
+public class FirstServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+      public void init(){
+    	  System.out.println("I am in init method");
+      }
+	
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {	
+         System.out.println("I am in doget method");
+         
+         PrintWriter out=response.getWriter();
+         out.println("<html>");
+         out.println("<body>");
+         out.println("Hello this is my first servlet");
+         out.println("</body>");
+         out.println("</html>");
+	}
+	
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+	}
+	public void destroy(){
+	   System.out.println("I am in Destroy method");	
+	}
+}
+
+===============================================================
+package com.servlet.first;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+
+//@WebServlet("/FirstServlet1")  
+public class FirstServlet1 extends HttpServlet {  
+public void doGet(HttpServletRequest request, HttpServletResponse response){  
+        try{  
+  
+        response.setContentType("text/html");  
+        PrintWriter out = response.getWriter();  
+          
+        String n=request.getParameter("userName");  
+        out.print("Welcome "+n);  
+          
+        //creating form that have invisible textfield  
+        out.print("<form action='servlet2'>");  
+        out.print("<input type='hidden' name='uname' value='"+n+"'>");  
+        out.print("<input type='submit' value='go'>");  
+        out.print("</form>");  
+        out.close();  
+  
+                }catch(Exception e){System.out.println(e);}  
+    }  
+  
+}
+
+===============================================================
+
+package com.servlet.first;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/Counter")
+public class CounterServlet extends HttpServlet {
+
+	int hit = 0;
+
+	public void init() {
+		hit = 0;
+	}
+
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		response.setContentType("text/html");
+
+		hit++;
+
+		PrintWriter out = response.getWriter();
+
+		out.println("<html>");
+		out.println("<body>");
+		out.println("Counter: " + hit);
+		out.println("</body>");
+		out.println("</html>");
+
+	}
+
+}
+===============================================================
+package com.servlet.first;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+@WebServlet("/DeleteCookie")
+public class DeleteCookie extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		HttpSession session=request.getSession();
+		String username=(String)session.getAttribute("USER_NAME");
+
+		PrintWriter out = response.getWriter();
+		out.println("Session value is --->"+username);
+		
+		Cookie[] cookies=request.getCookies();
+		int cookielength=cookies.length;
+		for(int i =0;i<cookielength;i++){
+			Cookie cookie=cookies[i];
+			cookie.setMaxAge(0);
+			cookie.setDomain(request.getHeader("host"));
+			response.addCookie(cookie);
+			}
+	}
+}
+
+================================================================
+
+
+package com.servlet.first;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+
+@WebServlet("/GetCookieServlet")
+public class GetCookieServlet extends HttpServlet {
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		Cookie cookies[] = request.getCookies();
+		String name = null;
+		String value = null;
+		String password = null;
+		for (int i = 0; i < cookies.length; i++) {
+			name = cookies[i].getName();
+			if (name.equals("username")) {
+				value = cookies[i].getValue();
+			}
+			if (name.equals("password")) {
+				password = cookies[i].getValue();
+			}
+			PrintWriter out = response.getWriter();
+			
+			out.println("<html>");
+			out.println("<form action='DeleteCookie'>");
+			out.println("<input type='submit' value='Delete Cookie'>");
+			out.println("</form>");
+			out.println("</html>");
+			
+			HttpSession session=request.getSession();
+			String username=(String)session.getAttribute("USER_NAME");
+			
+			out.println("Session value is-->" + username);
+			
+			out.close();
+		}
+	}
+}
+
+
+===========================================================
+
+package com.servlet.first;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/RefreshServlet")
+public class RefreshServlet extends HttpServlet {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setIntHeader("Refresh", 5);
+		response.getContentType();
+		
+		long time =System.currentTimeMillis();
+		PrintWriter out=response.getWriter();
+		out.println("<html>");
+		out.println("Current time is :"+time);
+		out.println("</html>");
+	}
+}
+		
+================================================
+package com.servlet.first;
+
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.PreparedStatement;
+
+public class RegisterStudent extends HttpServlet {
+	public void doGet(HttpServletRequest request, HttpServletResponse response) {
+		System.out.println("Hi Student Registration called");
+	}
+	
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+				
+		String id=request.getParameter("id");
+		
+		String name=request.getParameter("name");
+		
+		String password=request.getParameter("password");
+		
+		String address=request.getParameter("address");
+		
+		String zip=request.getParameter("zip");
+		
+		Connection connection=null;
+		PreparedStatement statement=null;
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			connection=DriverManager.getConnection("jdbc:mysql://localhost:3306/cnu","root","root");
+			String sql="insert into pioner_student values(?,?,?,?,?)";
+			statement = connection.prepareStatement(sql);
+			
+			statement.setInt(1,Integer.parseInt(id));
+			statement.setString(2, name);
+			statement.setString(3, address);
+			statement.setString(4, zip);
+			statement.setString(5, password);
+			
+			statement.executeUpdate();
+			
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		finally {
+			try {
+				if(connection !=null)
+				{
+					statement.close();
+				}
+				if(connection!=null)
+				{
+				connection.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}	
+			PrintWriter out=response.getWriter();
+			out.println("<html>");
+			out.println("Student register successfuly !");
+			out.println("</html>");
+			
+			
+		}
+	}
+}
+===============================================================
+
+package com.servlet.first;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class SecondServlet extends HttpServlet {
+	public void doGet(HttpServletRequest request,HttpServletResponse response) throws IOException{
+         System.out.println("I am in Second servlet");
+         
+         PrintWriter out=response.getWriter();
+         out.println("<html>");
+         out.println("<body>");
+         out.println("Hello this is my second servlet");
+         out.println("</body>");
+         out.println("</html>");
+	}
+}
+
+========================================================
+
+package com.servlet.first;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+
+//@WebServlet("/SecondServlet2")
+public class SecondServlet2 extends HttpServlet {
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException  {
+  
+    response.setContentType("text/html");  
+    PrintWriter out = response.getWriter();  
+      
+    String n=request.getParameter("uname");  
+    out.print("Hello "+n);  
+
+    out.close(); 
+}  
+}
+==============================================================
+package com.servlet.first;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/DemoServlet")
+public class SendReDirectEx extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html");  
+		PrintWriter pw=response.getWriter();  
+		  
+		response.sendRedirect("http://www.javatpoint.com");  
+		  
+		pw.close();  
+	}
+
+
+
+}
+================================================================
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+
+<form action="CookieServlet" method="post">
+<input type="text" name="username">
+
+<input type="submit" value="Submit"/>
+</form>
+</body>
+</html>
+
+========================================
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<form action="servlet1">
+Id:<input type="hidden" name="unmae" value=srinivasreddy"></br>  
+Name:<input type="text" name="userName"/><br/>  
+<input type="submit" value="go"/>  
+</form> 
+</body>
+</html>
+
+=================================================
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<!-- 
+<form action="servlet1">  
+Name:<input type="text" name="userName"/><br/>  
+<input type="submit" value="go"/>  
+</form>  
+ -->
+
+	<form action="RegisterStudent" method="post">
+
+		welcome to student registration form
+		<table>
+			<tr>
+				<td>Enter Student Id:<input type="text" name="id">
+				</td>
+			</tr>
+			<tr>
+				<td>Enter Student Name:<input type="text" name="name">
+				</td>
+			</tr>
+			<tr>
+				<td>Enter Student Password:<input type="password"
+					name="password">
+				</td>
+			</tr>
+			<tr>
+				<td>Enter Student Address:<input type="text" name="address">
+				</td>
+			</tr>
+			<tr>
+				<td>Enter Student Zip Xode:<input type="text" name="zip">
+				</td>
+			</tr>
+			<tr>
+				<td><input type="submit" name="submit" value="Register">
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>
+
+====================================================================
+
+web.xml
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:web="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" version="2.4">
+  <servlet>
+    <servlet-name>xyz</servlet-name>
+    <servlet-class>com.servlet.first.SecondServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>xyz</servlet-name>
+    <url-pattern>/SecondServlet</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>first</servlet-name>
+    <servlet-class>com.servlet.first.FirstServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>first</servlet-name>
+    <url-pattern>/First</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>register</servlet-name>
+    <servlet-class>com.servlet.first.RegisterStudent</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>register</servlet-name>
+    <url-pattern>/RegisterStudent</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>s1</servlet-name>
+    <servlet-class>com.servlet.first.FirstServlet1</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>s1</servlet-name>
+    <url-pattern>/servlet1</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>s2</servlet-name>
+    <servlet-class>com.servlet.first.SecondServlet2</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>s2</servlet-name>
+    <url-pattern>/servlet2</url-pattern>
+  </servlet-mapping>
+  <session-config>
+    <session-timeout>1</session-timeout>
+  </session-config>
+</web-app>
+
+==========================================================
+
+
+package com.jsp.servlet;
+
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import java.sql.PreparedStatement;
+
+
+@WebServlet("/RegisterServlet")
+public class RegisterServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String id=request.getParameter("id");
+		String name=request.getParameter("username");
+		String password=request.getParameter("password");
+		String city=request.getParameter("city");
+		String zip=request.getParameter("zip");
+		
+		Connection connection=null;
+		PreparedStatement statement=null;
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			connection=DriverManager.getConnection("jdbc:mysql://localhost:3306/cnu","root","root");
+			String sql="insert into pioner_student values(?,?,?,?,?)";
+			statement = connection.prepareStatement(sql);
+			
+			statement.setInt(1, Integer.parseInt(id));
+			statement.setString(2, name);
+			statement.setString(3, password);
+			statement.setString(4, city);
+			statement.setString(5, zip);
+			
+			statement.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			try {
+				if(connection !=null)
+				{
+					statement.close();
+				}
+				if(connection!=null)
+				{
+				connection.close();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}	
+		}
+		response.sendRedirect("success.jsp");
+	}
+}
+
+
+
+*/
